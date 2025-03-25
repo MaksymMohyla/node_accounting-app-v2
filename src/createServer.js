@@ -182,12 +182,20 @@ function createServer() {
       return;
     }
 
-    const updatedExpense = {
-      ...expense,
-      ...req.body,
-    };
+    if (req.body.userId) {
+      // client should not be able to change userId IMO
+      res.sendStatus(400);
 
-    res.send(updatedExpense);
+      return;
+    }
+
+    expense.spentAt = req.body.spentAt || expense.spentAt;
+    expense.title = req.body.title || expense.title;
+    expense.amount = req.body.amount || expense.amount;
+    expense.category = req.body.category || expense.category;
+    expense.note = req.body.note || expense.note;
+
+    res.send(expense);
   });
 
   return app;
